@@ -1,0 +1,52 @@
+[package]
+name = "bitwarden-e2e-client"
+version = "0.1.0"
+edition = "2021"
+description = "E2E encrypted secure-group client: HPKE/X-Wing crypto lib + CLI test driver"
+license = "GPL-3.0"
+
+[lib]
+name = "bitwarden_e2e_client"
+path = "src/lib.rs"
+
+[[bin]]
+name = "e2e-cli"
+path = "src/bin/e2e-cli.rs"
+
+[dependencies]
+# Crypto (all WASM-safe, see vaultwarden docs/e2e-groups/02-crypto-protocol.md §7)
+hpke = { version = "0.14", features = ["aes"] } # X-Wing: kem::XWing (ML-KEM-768 + X25519)
+aes-gcm = "0.10"
+aes = "0.8"
+cbc = { version = "0.1", features = ["alloc", "block-padding"] }
+hmac = "0.12"
+subtle = "2"
+sha2 = "0.10"
+hkdf = "0.12"
+pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
+argon2 = { version = "0.5", default-features = false, features = ["alloc"] }
+base64 = "0.22"
+rand = "0.8"
+zeroize = "1"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# HTTP transport
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+url = "2"
+urlencoding = "2"
+
+# Errors
+thiserror = "2"
+
+# CLI
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+dirs = "5"
+rpassword = "7"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
